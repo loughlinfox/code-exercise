@@ -1,49 +1,57 @@
 # Code exercise
 
+## Edits
+* v2 of the problem changes task IDs to be represented as a UUID/GUID;
+
+
 ## Problem
 Suppose you have an application where users create lists of tasks to be completed, where all tasks are ordered.
 
 There can be 0 or more tasks in a list, and tasks can be nested to an arbitrary depth. For example:
-* Grocery shopping
+* Go shopping
     - Pickup milk
     - Pickup bread
-* Go for a walk
-* Send mail
+* Gym
+* Cook dinner
 
 Since the database backing the application stores tasks independently each task must be stored along
  with the IDs of its previous, next and parent tasks (where necessary).
+ 
+Task IDs are represented as UUIDs/GUIDs (or their string representation for the purpose of this exercise).
+IDs are not necessarily ordered by creation time - i.e. tasks can be created out of order.
+  
 The previous example could therefore be stored as:
 
 [**Code block 1**]
 ```json
 [
   {
-    "description": "Grocery shopping",
-    "ID": 1,
-    "nextID": 4
+    "ID": "2e0dc336-35db-4815-9f7c-5bceb1475806",
+    "description": "Go shopping",
+    "nextID": "26c166e0-0009-4a8c-bb56-d0bf43bef972"
   },
   {
-    "description": "Pickup milk",
-    "ID": 2,
-    "nextID": 3,
-    "parentID": 1
+    "ID": "26c166e0-0009-4a8c-bb56-d0bf43bef972",
+    "description": "Gym",
+    "previousID": "2e0dc336-35db-4815-9f7c-5bceb1475806",
+    "nextID": "cca0e3a1-2de1-4b20-923c-ad53a8dcb298"
   },
   {
+    "ID": "848fe9e5-b545-4963-8f45-335c24f6b22d",
     "description": "Pickup bread",
-    "ID": 3,
-    "previousID": 2,
-    "parentID": 1
+    "previousID": "74af3911-c4d0-492e-b1d2-aff36d2d785f",
+    "parentID": "2e0dc336-35db-4815-9f7c-5bceb1475806"
   },
   {
-    "description": "Go for a walk",
-    "ID": 4,
-    "previousID": 1,
-    "nextID": 5
+    "ID": "74af3911-c4d0-492e-b1d2-aff36d2d785f",
+    "description": "Pickup milk",
+    "nextID": "848fe9e5-b545-4963-8f45-335c24f6b22d",
+    "parentID": "2e0dc336-35db-4815-9f7c-5bceb1475806"
   },
   {
-    "description": "Send mail",
-    "ID": 5,
-    "previousID": 4
+    "ID": "cca0e3a1-2de1-4b20-923c-ad53a8dcb298",
+    "description": "Cook dinner",
+    "previousID": "26c166e0-0009-4a8c-bb56-d0bf43bef972"
   }
 ]
 ```
@@ -53,30 +61,30 @@ To correctly be displayed to the user the tasks must be ordered into a hierarchi
 Using the previous example again the ordered tasks would be represented by the following JSON:
 
 [**Code block 2**]
-```js
+```json
 [
   {
     "task": {
-      "description": "Grocery shopping",
-      "ID": 1,
-      "nextID": 4
+      "ID": "2e0dc336-35db-4815-9f7c-5bceb1475806",
+      "description": "Go shopping",
+      "nextID": "26c166e0-0009-4a8c-bb56-d0bf43bef972"
     },
     "subTasks": [
       {
         "task": {
+          "ID": "74af3911-c4d0-492e-b1d2-aff36d2d785f",
           "description": "Pickup milk",
-          "ID": 2,
-          "nextID": 3,
-          "parentID": 1
+          "nextID": "848fe9e5-b545-4963-8f45-335c24f6b22d",
+          "parentID": "2e0dc336-35db-4815-9f7c-5bceb1475806"
         },
         "subTasks": []
       },
       {
         "task": {
+          "ID": "848fe9e5-b545-4963-8f45-335c24f6b22d",
           "description": "Pickup bread",
-          "ID": 3,
-          "previousID": 2,
-          "parentID": 1
+          "previousID": "74af3911-c4d0-492e-b1d2-aff36d2d785f",
+          "parentID": "2e0dc336-35db-4815-9f7c-5bceb1475806"
         },
         "subTasks": []
       }
@@ -84,18 +92,18 @@ Using the previous example again the ordered tasks would be represented by the f
   },
   {
     "task": {
-      "description": "Go for a walk",
-      "ID": 4,
-      "previousID": 1,
-      "nextID": 5
+      "ID": "26c166e0-0009-4a8c-bb56-d0bf43bef972",
+      "description": "Gym",
+      "previousID": "2e0dc336-35db-4815-9f7c-5bceb1475806",
+      "nextID": "cca0e3a1-2de1-4b20-923c-ad53a8dcb298"
     },
     "subTasks": []
   },
   {
     "task": {
-      "description": "Send mail",
-      "ID": 5,
-      "previousID": 4
+      "ID": "cca0e3a1-2de1-4b20-923c-ad53a8dcb298",
+      "description": "Cook dinner",
+      "previousID": "26c166e0-0009-4a8c-bb56-d0bf43bef972"
     },
     "subTasks": []
   }
@@ -128,21 +136,27 @@ These artifacts should be submitted either via:
 3. Link to github/gitlab repo (if private and on github please invite `loughlin@crewmanfour.com`).
 
 ### Constraints
+
+#### Error checking
+The solution can assume the input JSON is well-formed and that all task references are valid (e.g. there are no duplicate IDs).
+
 #### Programming language
 Suggested programming languages include:
 * JavaScript / TypeScript;
 * Python (2/3);
-* Java;
-* Kotlin;
+* F#;
 * Scala;
 * Clojure;
-* F#;
+* Java;
+* Kotlin;
 * Rust;
 * Swift;
 * OCaml; or
-* Haskell;
+* Haskell.
 
-If you are not familiar with any of these languages feel free to BYO, however a more thorough explanation of the solution as well as compilation and running instructions will be necessary. 
+**NOTE** For any compiled language please ensure the README includes sufficiently detailed build (from source code) and run instructions. 
+Using a package manager is okay. 
+Any solution which includes using binary blobs/jars/etc will not be tested.
 
 #### Environment
 Your solution will be tested within a Linux or MacOS environment, so please ensure some degree of cross platform compatibility if working outside of these OSs.

@@ -1,0 +1,27 @@
+[
+  {
+    "task": {
+      "ID": "53896dcb-2d72-4aa8-acd2-93e1365dd496",
+      "description": "Task-1"
+    },
+    "subTasks": [
+      {
+        "task": {
+          "ID": "dd3798d0-03e8-45df-8e62-bca47d64535c",
+          "description": "Task-2",
+          "parentID": "53896dcb-2d72-4aa8-acd2-93e1365dd496"
+        },
+        "subTasks": [
+          {
+            "task": {
+              "ID": "dd2f82d0-7329-49d3-8ce6-0d6891f5dea6",
+              "description": "Task-3",
+              "parentID": "dd3798d0-03e8-45df-8e62-bca47d64535c"
+            },
+            "subTasks": []
+          }
+        ]
+      }
+    ]
+  }
+]
